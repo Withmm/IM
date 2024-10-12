@@ -10,7 +10,7 @@ func Router() *gin.Engine {
 	// homepage
 	e.GET("/index", service.GetIndex)
 	// check userlist
-	e.GET("/user/userList", service.GetUserList)
+	e.GET("/user/userList", service.FindUserByNameAndPassword)
 	// create new user
 	e.POST("/user/userList", service.CreateUser)
 	// delete user by id

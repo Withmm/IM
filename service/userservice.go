@@ -4,6 +4,7 @@ import (
 	"strconv"
 
 	"github.com/Withmm/IM/models"
+	"github.com/Withmm/IM/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 )
@@ -28,8 +29,17 @@ func CreateUser(c *gin.Context) {
 		})
 		return
 	}
-	user.PassWord = password
+	// 将明文储存为密文
+	salt, err := utils.GenerateSalt(16)
+	if err != nil {
+		c.JSON(400, gin.H{
+			"salt generate error": err.Error(),
+		})
+	}
+	user.Salt = salt
+	user.PassWord = utils.MakePassword(password, user.Salt)
 
+	//输入信息校验
 	if err := validator.New().Struct(user); err != nil {
 		c.JSON(400, gin.H{
 			"input error": "User attribute input error:" + err.Error(),
@@ -37,7 +47,7 @@ func CreateUser(c *gin.Context) {
 		return
 	}
 
-	user.PassWord = password
+	//调用后端修改数据库
 	if err := models.CreateUser(user); err != nil {
 		c.JSON(400, gin.H{
 			"database error": err.Error(),
@@ -96,5 +106,19 @@ func UpdateUser(c *gin.Context) {
 
 	c.JSON(200, gin.H{
 		"message": "user update successfully",
+	})
+}
+
+func FindUserByNameAndPassword(c *gin.Context) {
+	name := c.PostForm("name")
+	password := c.PostForm("password")
+	if err := models.FindUserByNameAndPassword(name, password); err != nil {
+		c.JSON(400, gin.H{
+			"data error": err.Error(),
+		})
+		return
+	}
+	c.JSON(200, gin.H{
+		"message": "user found successfully",
 	})
 }

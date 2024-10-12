@@ -11,9 +11,10 @@ import (
 type UserBasic struct {
 	gorm.Model
 	Name          string `validate:"required,min=2,max=100"`
-	PassWord      string `validate:"required,min=6,max=24"`
+	PassWord      string `validate:"required"`
 	Phone         string `validate:"required,len=11"`
 	Email         string `validate:"required,email"`
+	Salt          string `validate:"required"`
 	Identity      string
 	ClientIp      string
 	ClientPort    string
@@ -79,4 +80,21 @@ func UpdateUser(id int, updates map[string]interface{}) error {
 	}
 
 	return utils.DB.Model(&user).Updates(updates).Error
+}
+
+func FindUserByNameAndPassword(name string, password string) error {
+	user := UserBasic{}
+	result := utils.DB.Where("name = ?", name).First(&user)
+	// 用户名不存在
+	if result.Error != nil {
+		return result.Error
+	}
+
+	cipher := utils.MakePassword(password, user.Salt)
+	if cipher != user.PassWord {
+		//fmt.Println(user.PassWord)
+		//fmt.Println(cipher)
+		return errors.New("password is wrong")
+	}
+	return nil
 }
