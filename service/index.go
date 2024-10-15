@@ -1,7 +1,15 @@
 package service
 
-import "github.com/gin-gonic/gin"
+import (
+	"html/template"
+
+	"github.com/gin-gonic/gin"
+)
 
 func GetIndex(c *gin.Context) {
-	c.JSON(200, gin.H{"messge": "welcome!"})
+	ind, err := template.ParseFiles("index.html", "views/chat/head.html")
+	if err != nil {
+		panic(err)
+	}
+	ind.Execute(c.Writer, "index")
 }
