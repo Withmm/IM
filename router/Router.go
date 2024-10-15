@@ -17,5 +17,9 @@ func Router() *gin.Engine {
 	e.DELETE("/user/:id", service.DeleteUser)
 	// update user by id
 	e.PUT("/user/:id", service.UpdateUser)
+
+	//msg module
+	e.GET("/user/sendMsg", service.SendMsg)
+	e.GET("/user/sendUserMsg", service.SendUserMsg)
 	return e
 }

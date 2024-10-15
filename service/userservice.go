@@ -1,12 +1,16 @@
 package service
 
 import (
+	"fmt"
+	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/Withmm/IM/models"
 	"github.com/Withmm/IM/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
+	"github.com/gorilla/websocket"
 )
 
 func GetUserList(c *gin.Context) {
@@ -121,4 +125,53 @@ func FindUserByNameAndPassword(c *gin.Context) {
 	c.JSON(200, gin.H{
 		"message": "user found successfully",
 	})
+}
+
+var upGrader = websocket.Upgrader{
+	CheckOrigin: func(r *http.Request) bool {
+		return true
+	},
+}
+
+func SendMsg(c *gin.Context) {
+	// fmt.Println("协议准备升级为websocket")
+	// 首先将协议升级为websocket协议
+	ws, err := upGrader.Upgrade(c.Writer, c.Request, nil)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	// fmt.Println("websocket升级完成")
+	// 生命周期管理
+	defer func(ws *websocket.Conn) {
+		err := ws.Close()
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+	}(ws)
+
+	MsgHandle(ws, c)
+}
+
+func MsgHandle(ws *websocket.Conn, c *gin.Context) {
+	// fmt.Println("MsgHandle...")
+	for {
+		msg, err := utils.Subscibe(c, utils.PublishKey)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		tm := time.Now().Format("2006-01-02 15:04:05")
+		m := fmt.Sprintf("[ws][%s]: %s", tm, msg)
+		err = ws.WriteMessage(1, []byte(m))
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+	}
+}
+
+func SendUserMsg(c *gin.Context) {
+	models.Chat(c.Writer, c.Request)
 }

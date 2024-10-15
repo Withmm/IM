@@ -12,8 +12,8 @@ func main() {
 		panic("fail to connect database")
 	}
 
-	db.AutoMigrate(&models.UserBasic{})
-
+	db.AutoMigrate(&models.GroupBasic{})
+	db.AutoMigrate(&models.Contact{})
 	// create
 	//user := &models.UserBasic{}
 	//user.Name = "xiongzile"
