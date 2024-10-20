@@ -22,13 +22,13 @@ func GetUserList(c *gin.Context) {
 func CreateUser(c *gin.Context) {
 	user := models.UserBasic{}
 	user.Name = c.PostForm("name")
-	user.Email = c.PostForm("email")
-	user.Phone = c.PostForm("phone")
+	//user.Email = c.PostForm("email")
+	//user.Phone = c.PostForm("phone")
 	password := c.PostForm("password")
-	repassword := c.PostForm("repassword")
+	repassword := c.PostForm("Identity")
 
 	if password != repassword {
-		c.JSON(400, gin.H{
+		c.JSON(200, gin.H{
 			"input error": "The two passwords do not match",
 		})
 		return
@@ -36,7 +36,7 @@ func CreateUser(c *gin.Context) {
 	// 将明文储存为密文
 	salt, err := utils.GenerateSalt(16)
 	if err != nil {
-		c.JSON(400, gin.H{
+		c.JSON(200, gin.H{
 			"salt generate error": err.Error(),
 		})
 	}
@@ -45,7 +45,7 @@ func CreateUser(c *gin.Context) {
 
 	//输入信息校验
 	if err := validator.New().Struct(user); err != nil {
-		c.JSON(400, gin.H{
+		c.JSON(200, gin.H{
 			"input error": "User attribute input error:" + err.Error(),
 		})
 		return
@@ -53,7 +53,7 @@ func CreateUser(c *gin.Context) {
 
 	//调用后端修改数据库
 	if err := models.CreateUser(user); err != nil {
-		c.JSON(400, gin.H{
+		c.JSON(200, gin.H{
 			"database error": err.Error(),
 		})
 		return
@@ -114,17 +114,29 @@ func UpdateUser(c *gin.Context) {
 }
 
 func FindUserByNameAndPassword(c *gin.Context) {
+	// 在数据库中查找
 	name := c.PostForm("name")
 	password := c.PostForm("password")
-	if err := models.FindUserByNameAndPassword(name, password); err != nil {
-		c.JSON(400, gin.H{
-			"data error": err.Error(),
+	user, err := models.FindUserByNameAndPassword(name, password)
+	if err != nil {
+		c.JSON(200, gin.H{
+			"code":    -1,
+			"message": err.Error(),
+			"user":    user,
 		})
 		return
 	}
+
 	c.JSON(200, gin.H{
-		"message": "user found successfully",
+		"code":    0,
+		"message": "Login successful",
+		"user":    user,
 	})
+	/*
+		c.JSON(200, gin.H{
+			"message": "user found successfully",
+		})
+	*/
 }
 
 var upGrader = websocket.Upgrader{

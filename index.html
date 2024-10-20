@@ -46,19 +46,21 @@
                 //检测手机号是否正确
                 console.log("login")
                 //检测密码是否为空
-
                 //网络请求
                 //封装了promis
-                util.post("user/findUserByNameAndPwd",this.user).then(res=>{
-                    console.log(res)
+                util.post("/user/findUserByNameAndPwd",this.user).then(res=>{
+                    console.log("进入条件判断")
+                    console.log(res.user)
                     if(res.code!=0){
+                        console.log("错误")
                         mui.toast(res.message)
-                    }else{         
-                        var url = "/toChat?userId="+res.data.ID+"&token="+res.data.Identity
-                        userInfo(res.data)
-                        userId(res.data.ID)
-                        mui.toast("登录成功,即将跳转")
+                    }else{
+                        //console.log("hello")  
+                        //console.log("正确")       
+                        //location.replace("localhost:8080/toChat")
+                        var url = "toChat"
                         location.href = url
+                        mui.toast("登陆成功， 即将跳转")
                     }
                 })
             },

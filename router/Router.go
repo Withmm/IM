@@ -14,9 +14,9 @@ func Router() *gin.Engine {
 	e.GET("/", service.GetIndex)
 	e.GET("/index", service.GetIndex)
 	// check userlist
-	e.GET("/user/userList", service.FindUserByNameAndPassword)
+	e.POST("/user/findUserByNameAndPwd", service.FindUserByNameAndPassword)
 	// create new user
-	e.POST("/user/userList", service.CreateUser)
+	e.POST("/user/createUser", service.CreateUser)
 	// delete user by id
 	e.DELETE("/user/:id", service.DeleteUser)
 	// update user by id
@@ -25,5 +25,8 @@ func Router() *gin.Engine {
 	//msg module
 	e.GET("/user/sendMsg", service.SendMsg)
 	e.GET("/user/sendUserMsg", service.SendUserMsg)
+
+	e.GET("/toRegister", service.ToRegister)
+	e.GET("/toChat", service.ToChat)
 	return e
 }
