@@ -45,14 +45,15 @@ func CreateUser(user UserBasic) error {
 	if result := utils.DB.Where("name = ?", user.Name).First(&tmp); result.Error == nil {
 		return fmt.Errorf("user : %s has been registered", user.Name)
 	}
+	/*
+		if result := utils.DB.Where("email = ?", user.Email).First(&tmp); result.Error == nil {
+			return fmt.Errorf("email : %s has been registered", user.Email)
+		}
 
-	if result := utils.DB.Where("email = ?", user.Email).First(&tmp); result.Error == nil {
-		return fmt.Errorf("email : %s has been registered", user.Email)
-	}
-
-	if result := utils.DB.Where("phone = ?", user.Phone).First(&tmp); result.Error == nil {
-		return fmt.Errorf("phone number : %s****%s has been registered", user.Phone[0:3], user.Phone[7:11])
-	}
+		if result := utils.DB.Where("phone = ?", user.Phone).First(&tmp); result.Error == nil {
+			return fmt.Errorf("phone number : %s****%s has been registered", user.Phone[0:3], user.Phone[7:11])
+		}
+	*/
 
 	return utils.DB.Create(&user).Error
 }

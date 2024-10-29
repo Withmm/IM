@@ -7,9 +7,6 @@ import (
 
 func Router() *gin.Engine {
 	e := gin.Default()
-
-	e.Static("/asset", "./asset/")
-	e.LoadHTMLGlob("views/**/*")
 	// homepage
 	e.GET("/", service.GetIndex)
 	e.GET("/index", service.GetIndex)

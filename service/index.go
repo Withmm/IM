@@ -10,11 +10,11 @@ import (
 )
 
 func GetIndex(c *gin.Context) {
-	ind, err := template.ParseFiles("index.html", "views/chat/head.html")
+	ind, err := template.ParseFiles("index.html")
 	if err != nil {
 		panic(err)
 	}
-	ind.Execute(c.Writer, "index")
+	ind.Execute(c.Writer, nil)
 }
 
 func ToChat(c *gin.Context) {
@@ -41,16 +41,16 @@ func ToChat(c *gin.Context) {
 }
 
 func ToRegister(c *gin.Context) {
-	ind, err := template.ParseFiles("./views/user/register.html")
+	ind, err := template.ParseFiles("views/register.html")
 	if err != nil {
 		c.String(http.StatusInternalServerError, "页面加载失败，请稍后重试")
 		return
 	}
-	ind.Execute(c.Writer, "register")
+	ind.Execute(c.Writer, nil)
 }
 
 func ToLogin(c *gin.Context) {
-	ind, err := template.ParseFiles("login.html")
+	ind, err := template.ParseFiles("views/login.html")
 	if err != nil {
 		panic(err)
 	}

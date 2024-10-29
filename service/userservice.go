@@ -21,11 +21,11 @@ func GetUserList(c *gin.Context) {
 
 func CreateUser(c *gin.Context) {
 	user := models.UserBasic{}
-	user.Name = c.PostForm("name")
+	user.Name = c.PostForm("username")
 	//user.Email = c.PostForm("email")
 	//user.Phone = c.PostForm("phone")
 	password := c.PostForm("password")
-	repassword := c.PostForm("Identity")
+	repassword := c.PostForm("repassword")
 
 	if password != repassword {
 		c.JSON(200, gin.H{
