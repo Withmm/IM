@@ -113,9 +113,9 @@ func UpdateUser(c *gin.Context) {
 	})
 }
 
-func FindUserByNameAndPassword(c *gin.Context) {
+func Login(c *gin.Context) {
 	// 在数据库中查找
-	name := c.PostForm("name")
+	name := c.PostForm("username")
 	password := c.PostForm("password")
 	user, err := models.FindUserByNameAndPassword(name, password)
 	if err != nil {
@@ -186,4 +186,8 @@ func MsgHandle(ws *websocket.Conn, c *gin.Context) {
 
 func SendUserMsg(c *gin.Context) {
 	models.Chat(c.Writer, c.Request)
+}
+
+func Register(c *gin.Context) {
+	CreateUser(c)
 }

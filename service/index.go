@@ -48,3 +48,11 @@ func ToRegister(c *gin.Context) {
 	}
 	ind.Execute(c.Writer, "register")
 }
+
+func ToLogin(c *gin.Context) {
+	ind, err := template.ParseFiles("login.html")
+	if err != nil {
+		panic(err)
+	}
+	ind.Execute(c.Writer, nil)
+}

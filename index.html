@@ -1,69 +1,17 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-    <!--js include-->
-    {{template "/chat/head.shtml"}}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IM通讯系统</title>
 </head>
 <body>
-
-<header class="mui-bar mui-bar-nav">
-    <h1 class="mui-title">登录</h1>
-</header>
-{{.}}
-<div class="mui-content login-page" id="pageapp">
-    <form id='login-form' class="mui-input-group login-from">
-        <div class="mui-input-row">
-            <input v-model="user.name" placeholder="请输入用户名" type="text" class="mui-input-clear mui-input" >
-        </div>
-        <div class="mui-input-row">
-            <input v-model="user.password" placeholder="请输入密码"  type="password" class="mui-input-clear mui-input" >
-        </div>
+    <h1>欢迎来到我的IM通讯系统</h1>
+    <form action="/user/toLogin" method="get">
+        <button>登陆界面</button>
     </form>
-    <div class="mui-content-padded">
-        <button @click="login"  type="button"  class="mui-btn mui-btn-block mui-btn-primary btn-login">登录</button>
-        <div class="link-area"><a id='reg' href="/toRegister">注册账号</a> <span class="spliter">|</span> <a  id='forgetPassword'>忘记密码</a>
-        </div>
-    </div>
-    <div class="mui-content-padded oauth-area">
-    </div>
-</div>
+    <form action="/user/toRegister" method="get">
+        <button>注册界面</button>
+    </form>
 </body>
 </html>
-<script>
-    var app = new Vue({
-        el:"#pageapp",
-        data:function(){
-          return {
-              user:{
-                name:"",
-                password:"",
-              }
-          }
-        },
-        methods:{
-            login:function(){
-                //检测手机号是否正确
-                console.log("login")
-                //检测密码是否为空
-                //网络请求
-                //封装了promis
-                util.post("/user/findUserByNameAndPwd",this.user).then(res=>{
-                    console.log("进入条件判断")
-                    console.log(res.user)
-                    if(res.code!=0){
-                        console.log("错误")
-                        mui.toast(res.message)
-                    }else{
-                        //console.log("hello")  
-                        //console.log("正确")       
-                        //location.replace("localhost:8080/toChat")
-                        var url = "toChat"
-                        location.href = url
-                        mui.toast("登陆成功， 即将跳转")
-                    }
-                })
-            },
-        }
-    })
-</script>
