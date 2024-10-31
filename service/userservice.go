@@ -207,5 +207,23 @@ func AddFriend(c *gin.Context) {
 			"code":     -1,
 			"errorMsg": err.Error(),
 		})
+		return
+
 	}
+	c.Redirect(http.StatusSeeOther, fmt.Sprintf("/toFriendPage?userID=%d", myID))
+}
+
+func RemoveFriend(c *gin.Context) {
+	s := sessions.Default(c)
+	myID := s.Get("userID").(uint)
+	friendID, _ := strconv.Atoi(c.PostForm("friendID"))
+	if err := models.RemoveFriend(myID, uint(friendID)); err != nil {
+		c.JSON(200, gin.H{
+			"code":     -1,
+			"errorMsg": err.Error(),
+		})
+		return
+
+	}
+	c.Redirect(http.StatusSeeOther, fmt.Sprintf("/toFriendPage?userID=%d", myID))
 }

@@ -30,6 +30,7 @@ func Router() *gin.Engine {
 	e.GET("/toProfilePage", service.ToProfilePage)
 
 	e.POST("/addFriend", service.AddFriend)
+	e.POST("/removeFriend", service.RemoveFriend)
 	// delete user by id
 	e.DELETE("/user/:id", service.DeleteUser)
 	// update user by id

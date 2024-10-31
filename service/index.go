@@ -67,14 +67,32 @@ func ToChatPage(c *gin.Context) {
 
 func ToFriendPage(c *gin.Context) {
 	ind, err := template.ParseFiles("views/chat/friend.html")
-	id, _ := strconv.Atoi(c.Query("userID"))
 	if err != nil {
-		panic(err)
+		c.JSON(200, gin.H{
+			"error": "failed to load friend.html, it's not your fault.Please contact xiongzile99@gmail.com",
+		})
+		return
 	}
-	friends := models.GetFriends(uint(id))
+	id, err := strconv.Atoi(c.Query("userID"))
+	if err != nil {
+		c.JSON(200, gin.H{
+			"error": "Unable to atoi userID",
+		})
+		return
+	}
+	friends, err := models.GetFriends(uint(id))
+	if err != nil {
+		c.JSON(200, gin.H{
+			"error": err.Error(),
+		})
+	}
 	//user := models.UserBasic{}
 	//user.ID = uint(id)
-	ind.Execute(c.Writer, friends)
+	if err := ind.Execute(c.Writer, friends); err != nil {
+		c.JSON(200, gin.H{
+			"error": "failed to load friend.html, it's not your fault.Please contact xiongzile99@gmail.com",
+		})
+	}
 }
 
 func ToProfilePage(c *gin.Context) {
