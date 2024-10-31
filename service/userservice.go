@@ -207,6 +207,5 @@ func AddFriend(c *gin.Context) {
 			"code":     -1,
 			"errorMsg": err.Error(),
 		})
-		return
 	}
 }
