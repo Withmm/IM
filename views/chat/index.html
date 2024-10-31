@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>聊天界面</title>
+</head>
+<body>
+    <!-- 这里可以显示用户验证成功的消息 -->
+    <script>alert("恭喜您通过了用户验证")</script>
+
+    <h1>欢迎, {{ .Name }}!</h1> <!-- 显示用户名 -->
+
+    <a href="/toFriendPage?userID={{ .ID }}">好友</a>
+
+
+    <div class="content">
+        <p>用户信息：</p>
+        <ul>
+            <li>用户名: {{ .Name }}</li> <!-- 显示用户名 -->
+            <li>ID: {{.ID}}</li> 
+            <li>Token: {{.Salt}}</li> 
+        </ul>
+    </div>
+</body>
+</html>

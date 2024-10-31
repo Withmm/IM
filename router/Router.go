@@ -2,11 +2,16 @@ package router
 
 import (
 	"github.com/Withmm/IM/service"
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
 )
 
 func Router() *gin.Engine {
 	e := gin.Default()
+
+	store := cookie.NewStore([]byte("secret"))
+	e.Use(sessions.Sessions("session", store))
 	// homepage
 	e.GET("/", service.GetIndex)
 	e.GET("/index", service.GetIndex)
@@ -19,6 +24,12 @@ func Router() *gin.Engine {
 	// 注册
 	e.POST("/user/register", service.Register)
 
+	//主界面的三大子页面
+	e.GET("/toChatPage", service.ToChatPage)
+	e.GET("/toFriendPage", service.ToFriendPage)
+	e.GET("/toProfilePage", service.ToProfilePage)
+
+	e.POST("/addFriend", service.AddFriend)
 	// delete user by id
 	e.DELETE("/user/:id", service.DeleteUser)
 	// update user by id

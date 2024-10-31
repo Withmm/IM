@@ -56,3 +56,31 @@ func ToLogin(c *gin.Context) {
 	}
 	ind.Execute(c.Writer, nil)
 }
+
+func ToChatPage(c *gin.Context) {
+	ind, err := template.ParseFiles("views/chat/chat.html")
+	if err != nil {
+		panic(err)
+	}
+	ind.Execute(c.Writer, nil)
+}
+
+func ToFriendPage(c *gin.Context) {
+	ind, err := template.ParseFiles("views/chat/friend.html")
+	id, _ := strconv.Atoi(c.Query("userID"))
+	if err != nil {
+		panic(err)
+	}
+	friends := models.GetFriends(uint(id))
+	//user := models.UserBasic{}
+	//user.ID = uint(id)
+	ind.Execute(c.Writer, friends)
+}
+
+func ToProfilePage(c *gin.Context) {
+	ind, err := template.ParseFiles("views/chat/profile.html")
+	if err != nil {
+		panic(err)
+	}
+	ind.Execute(c.Writer, nil)
+}

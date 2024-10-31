@@ -2,12 +2,14 @@ package service
 
 import (
 	"fmt"
+	"html/template"
 	"net/http"
 	"strconv"
 	"time"
 
 	"github.com/Withmm/IM/models"
 	"github.com/Withmm/IM/utils"
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"github.com/gorilla/websocket"
@@ -126,12 +128,16 @@ func Login(c *gin.Context) {
 		})
 		return
 	}
-
-	c.JSON(200, gin.H{
-		"code":    0,
-		"message": "Login successful",
-		"user":    user,
-	})
+	// 成功登录，存储session
+	session := sessions.Default(c) // 使用gin-contrib/sessions包
+	session.Set("userID", user.ID)
+	session.Save()
+	// 账号密码正确， 显示聊天界面
+	ind, err := template.ParseFiles("views/chat/index.html")
+	if err != nil {
+		panic(err)
+	}
+	ind.Execute(c.Writer, user)
 	/*
 		c.JSON(200, gin.H{
 			"message": "user found successfully",
@@ -190,4 +196,17 @@ func SendUserMsg(c *gin.Context) {
 
 func Register(c *gin.Context) {
 	CreateUser(c)
+}
+
+func AddFriend(c *gin.Context) {
+	s := sessions.Default(c)
+	myID := s.Get("userID").(uint)
+	friendID, _ := strconv.Atoi(c.PostForm("friendID"))
+	if err := models.AddFriend(myID, uint(friendID)); err != nil {
+		c.JSON(200, gin.H{
+			"code":     -1,
+			"errorMsg": err.Error(),
+		})
+		return
+	}
 }
